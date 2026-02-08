@@ -10,12 +10,12 @@
       --bg1:#ffeaf3;
       --bg2:#fff7fb;
       --card:#ffffffcc;
-      --text:#2b2b2b;
-      --shadow: 0 18px 60px rgba(0,0,0,.12);
       --accent:#b30047;
+      --shadow: 0 18px 60px rgba(0,0,0,.12);
     }
 
     *{ box-sizing:border-box; }
+
     body{
       margin:0;
       min-height:100vh;
@@ -23,7 +23,6 @@
       align-items:center;
       justify-content:center;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
       background:
         radial-gradient(900px 500px at 20% 10%, #ffd6e6 0%, transparent 60%),
         radial-gradient(900px 500px at 80% 0%, #ffe0f4 0%, transparent 55%),
@@ -39,75 +38,63 @@
       font-size:22px;
       opacity:.9;
       animation: floatUp linear forwards;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,.12));
-      user-select:none;
       pointer-events:none;
     }
     @keyframes floatUp{
-      from{ transform: translateY(0) translateX(0) rotate(0deg); opacity:.95; }
-      to  { transform: translateY(-110vh) translateX(var(--dx)) rotate(var(--rot)); opacity:0; }
+      from{ transform: translateY(0); opacity:.95; }
+      to  { transform: translateY(-110vh); opacity:0; }
     }
 
     .card{
       width:min(620px, 94vw);
       background:var(--card);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,.7);
       border-radius:30px;
       box-shadow: var(--shadow);
-      padding:28px 22px 22px;
+      padding:28px 22px 24px;
       text-align:center;
-      position:relative;
     }
 
     .badge{
       display:inline-block;
       padding:8px 14px;
       border-radius:999px;
-      background: rgba(255,77,136,.10);
-      border: 1px solid rgba(255,77,136,.20);
+      background: rgba(255,77,136,.12);
       color:var(--accent);
       font-weight:800;
-      letter-spacing:.2px;
     }
 
     h1{
       margin:14px 0 8px;
       font-size: clamp(26px, 4vw, 36px);
-      line-height:1.1;
       color:var(--accent);
     }
 
     .sub{
       margin:0 0 18px;
-      opacity:.82;
-      font-size: 15px;
+      opacity:.8;
+      font-size:15px;
     }
 
     .teddyWrap{
-      margin: 12px auto 10px;
-      width: 180px;
-      height: 180px;
+      margin:12px auto;
+      width:180px;
+      height:180px;
       display:flex;
       align-items:center;
       justify-content:center;
-      border-radius: 26px;
-      background: rgba(255,255,255,.72);
-      border: 1px solid rgba(255,255,255,.92);
-      box-shadow: 0 10px 30px rgba(255,77,136,.12);
-      position:relative;
+      border-radius:26px;
+      background:#fff;
+      box-shadow: 0 10px 30px rgba(255,77,136,.15);
     }
 
-    /* teddy bounce (gentle) */
     .teddy{
-      width: 150px;
-      height: 150px;
-      object-fit:contain;
-      animation: teddyBounce 1.35s ease-in-out infinite;
+      width:150px;
+      animation: bounce 1.3s ease-in-out infinite;
     }
-    @keyframes teddyBounce{
-      0%,100%{ transform: translateY(0) scale(1); }
-      50%    { transform: translateY(-8px) scale(1.02); }
+    @keyframes bounce{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-8px); }
     }
 
     .btnRow{
@@ -116,7 +103,6 @@
       justify-content:center;
       flex-wrap:wrap;
       margin-top:14px;
-      align-items:center;
     }
 
     button{
@@ -124,61 +110,34 @@
       cursor:pointer;
       font-size:18px;
       font-weight:900;
-      padding:14px 24px;
+      padding:14px 22px;
       border-radius:18px;
-      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-      min-width: 170px;
-      letter-spacing:.2px;
-      transform-origin: center;
+      min-width:170px;
+      transition: transform .2s ease;
+      text-align:center;
+      line-height:1.25;
     }
-    button:active{ transform: translateY(1px) scale(.99); }
 
     .yes{
       background: linear-gradient(180deg, #38e97a, #18b455);
       color:white;
-      box-shadow: 0 14px 26px rgba(24,180,85,.25);
     }
 
     .no{
       background: linear-gradient(180deg, #ff5d6c, #e12b3a);
       color:white;
-      box-shadow: 0 14px 26px rgba(225,43,58,.20);
-      white-space: normal;
-      line-height: 1.25;
-      text-align: center;
+      white-space:normal;
     }
-
-    button:hover{ transform: translateY(-1px) scale(1.01); filter: brightness(1.02); }
 
     .hint{
-      margin-top: 10px;
+      margin-top:10px;
       font-size:12px;
-      opacity:.7;
-    }
-
-    /* cute toast */
-    .toast{
-      position: fixed;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,.88);
-      border: 1px solid rgba(255,255,255,.95);
-      box-shadow: 0 16px 40px rgba(0,0,0,.12);
-      padding: 12px 14px;
-      border-radius: 16px;
-      font-weight: 800;
-      color:var(--accent);
-      display:none;
-      z-index: 50;
-      max-width: 92vw;
-      text-align:center;
+      opacity:.65;
     }
   </style>
 </head>
 
 <body>
-  <div class="toast" id="toast"></div>
 
   <div class="card">
     <div class="badge">💌 valentine mode: on</div>
@@ -186,8 +145,7 @@
     <p class="sub">i promise i’m sweet… and i bring snacks 🍪</p>
 
     <div class="teddyWrap">
-      <!-- Upload a cute teddy GIF to your repo and name it teddy.gif -->
-      <img class="teddy" src="teddy.gif" alt="Cute teddy bear" />
+      <img src="teddy.gif" class="teddy" alt="cute teddy" />
     </div>
 
     <div class="btnRow">
@@ -195,36 +153,24 @@
       <button class="no" id="noBtn" onclick="answerNo()">NO… 😳</button>
     </div>
 
-    <div class="hint">you can tap no again… 🧸</div>
-    <div class="hint" style="margin-top:14px;">no pressure. just vibes. 🌷</div>
+    <div class="hint">you can tap the red button again 🧸</div>
+    <div class="hint">no pressure. just vibes. 🌷</div>
   </div>
 
   <script>
-    // Floating hearts
-    const hearts = ["💖","💘","💕","💗","💓","💝","🫶","🌸","✨"];
+    const hearts = ["💖","💘","💕","💗","🌸","✨"];
+
     function spawnHeart(){
       const h = document.createElement("div");
       h.className = "heart";
       h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
-      h.style.left = (Math.random()*100) + "vw";
-      h.style.setProperty("--dx", (Math.random()*120 - 60) + "px");
-      h.style.setProperty("--rot", (Math.random()*120 - 60) + "deg");
-      const dur = 6 + Math.random()*5;
-      h.style.animationDuration = dur + "s";
+      h.style.left = Math.random()*100 + "vw";
+      h.style.animationDuration = (5 + Math.random()*4) + "s";
       document.body.appendChild(h);
-      setTimeout(()=>h.remove(), dur*1000);
+      setTimeout(()=>h.remove(), 9000);
     }
     setInterval(spawnHeart, 450);
-    for(let i=0;i<10;i++) setTimeout(spawnHeart, i*200);
 
-    function showToast(msg){
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.style.display = "block";
-      setTimeout(()=> t.style.display = "none", 2200);
-    }
-
-    // NO button text changes (no "Reason" wording)
     const noTexts = [
       "i’m actually very sweet 🧸",
       "i owe you a cute food date 🍕",
@@ -235,51 +181,31 @@
       "life feels nicer with company ✨",
       "this could be kinda cute 🥹",
       "just saying… we’d look good 😌",
-      "okay… maybe yes? 💖"
+      "okay… maybe yes? 🥺💖"
     ];
 
-    let noClicks = 0;
+    let index = 0;
     let yesScale = 1;
 
     function answerNo(){
       const noBtn = document.getElementById("noBtn");
       const yesBtn = document.getElementById("yesBtn");
 
-      if (noClicks < noTexts.length) {
-        noBtn.textContent = noTexts[noClicks];
-        noBtn.style.fontSize = "14px";
-        noBtn.style.padding = "14px 16px";
-        noClicks++;
-      } else {
-        noBtn.textContent = "okay… yes? 🥺💖";
-      }
+      noBtn.textContent = noTexts[Math.min(index, noTexts.length - 1)];
+      noBtn.style.fontSize = "14px";
 
-      // YES button slowly grows each time NO is clicked
-      yesScale = Math.min(1 + noClicks * 0.07, 1.7);
+      index++;
+      yesScale = Math.min(1 + index * 0.07, 1.7);
       yesBtn.style.transform = `scale(${yesScale})`;
 
-      showToast("hehe 🧸💗");
-      for (let i = 0; i < 6; i++) setTimeout(spawnHeart, i * 90);
-
-      // OPTIONAL: log answer clicks with a free form-backend (e.g., Getform)
-      // fetch("PASTE_YOUR_ENDPOINT_HERE", {
-      //   method:"POST",
-      //   headers:{ "Content-Type":"application/x-www-form-urlencoded" },
-      //   body: "click=no&step=" + encodeURIComponent(noClicks) + "&ts=" + encodeURIComponent(new Date().toISOString())
-      // });
+      for(let i=0;i<5;i++) setTimeout(spawnHeart, i*100);
     }
 
     function answerYes(){
-      showToast("yayyy 🥹💖 you just made my teddy very happy 🧸");
-      for (let i = 0; i < 18; i++) setTimeout(spawnHeart, i * 80);
-
-      // OPTIONAL: log YES with a free form-backend (e.g., Getform)
-      // fetch("PASTE_YOUR_ENDPOINT_HERE", {
-      //   method:"POST",
-      //   headers:{ "Content-Type":"application/x-www-form-urlencoded" },
-      //   body: "answer=YES&ts=" + encodeURIComponent(new Date().toISOString())
-      // });
+      alert("yayyy 🥹💖 you just made my teddy very happy 🧸");
+      for(let i=0;i<18;i++) setTimeout(spawnHeart, i*80);
     }
   </script>
+
 </body>
 </html>
