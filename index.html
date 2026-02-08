@@ -11,7 +11,6 @@
       --bg2:#fff7fb;
       --card:#ffffffcc;
       --text:#2b2b2b;
-      --pink:#ff4d88;
       --shadow: 0 18px 60px rgba(0,0,0,.12);
     }
 
@@ -49,7 +48,7 @@
     }
 
     .card{
-      width:min(560px, 94vw);
+      width:min(580px, 94vw);
       background:var(--card);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,.7);
@@ -77,7 +76,6 @@
       line-height:1.1;
       color:#b30047;
     }
-
     .sub{
       margin:0 0 18px;
       opacity:.82;
@@ -116,6 +114,7 @@
       justify-content:center;
       flex-wrap:wrap;
       margin-top:14px;
+      align-items:center;
     }
 
     button{
@@ -125,48 +124,65 @@
       font-weight:900;
       padding:14px 24px;
       border-radius:18px;
-      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
       min-width: 165px;
       letter-spacing:.2px;
+      transform-origin: center;
     }
     button:active{ transform: translateY(1px) scale(.99); }
 
+    /* YES grows progressively: we scale via JS on the element */
     .yes{
       background: linear-gradient(180deg, #38e97a, #18b455);
       color:white;
       box-shadow: 0 14px 26px rgba(24,180,85,.25);
     }
+
     .no{
       background: linear-gradient(180deg, #ff5d6c, #e12b3a);
       color:white;
       box-shadow: 0 14px 26px rgba(225,43,58,.20);
     }
+
     button:hover{ transform: translateY(-1px) scale(1.01); filter: brightness(1.02); }
 
-    .panel{
-      margin-top:18px;
-      text-align:left;
-      border-radius:18px;
-      padding:14px 14px;
-      border: 1px dashed rgba(255,77,136,.35);
-      background: rgba(255,255,255,.65);
+    /* Cute NO message box (red-ish) */
+    .noBox{
+      margin: 16px auto 0;
+      max-width: 520px;
+      border-radius: 18px;
+      padding: 14px 14px;
+      text-align: left;
       display:none;
+      background: rgba(255, 93, 108, 0.12);
+      border: 1px solid rgba(225, 43, 58, 0.22);
+      box-shadow: 0 10px 26px rgba(225,43,58,.06);
+      animation: popIn .18s ease-out;
     }
-    .panel h2{
-      margin:0 0 8px;
-      font-size:18px;
+    @keyframes popIn{
+      from{ transform: scale(.98); opacity:.3; }
+      to  { transform: scale(1); opacity:1; }
+    }
+    .noBoxTitle{
+      margin: 0 0 6px;
+      font-size: 16px;
+      font-weight: 900;
       color:#b30047;
     }
-    .panel ul{ margin:0; padding-left:18px; }
-    .panel li{ margin:6px 0; }
+    .noBoxText{
+      margin:0;
+      font-size: 14px;
+      opacity:.9;
+    }
 
-    .footer{
-      margin-top:16px;
-      font-size:12px;
+    /* Tiny cute note under buttons */
+    .hint{
+      margin-top: 10px;
+      font-size: 12px;
       opacity:.7;
     }
 
-    /* cute pop message */
+    /* cute top toast */
     .toast{
       position: fixed;
       top: 18px;
@@ -186,7 +202,7 @@
 </head>
 
 <body>
-  <div class="toast" id="toast">Yayyy 🥹💖 You just made my teddy happy 🧸</div>
+  <div class="toast" id="toast"></div>
 
   <div class="card">
     <div class="badge">💌 Valentine Mode: ON</div>
@@ -194,27 +210,23 @@
     <p class="sub">I promise I’m sweet… and I bring snacks 🍪</p>
 
     <div class="teddyWrap">
-      <!-- Upload a cute teddy GIF to your repo and name it teddy.gif -->
-      <img class="teddy" src="teddy.gif" alt="Cute jumping teddy bear" />
+      <img class="teddy" src="teddy.gif" alt="Cute teddy bear" />
     </div>
 
     <div class="btnRow">
-      <button class="yes" onclick="answer('YES')">YES 🥰</button>
-      <button class="no"  onclick="answer('NO')">NO… 😳</button>
+      <button class="yes" id="yesBtn" onclick="answerYes()">YES 🥰</button>
+      <button class="no" id="noBtn" onclick="answerNo()">NO… 😳</button>
     </div>
 
-    <div id="noPanel" class="panel">
-      <h2>Wait a sec… 🥺👉👈</h2>
-      <ul>
-        <li>🧸 I’ll be very sweet to you</li>
-        <li>🍕 I owe you a cute food date</li>
-        <li>😂 I’ll make you laugh (even at bad jokes)</li>
-        <li>🌸 Calm vibes + good energy</li>
-        <li>💖 Saying yes might make you smile</li>
-      </ul>
+    <div class="hint">Tip: you can click “NO” again… but the teddy might disagree 🧸</div>
+
+    <!-- Progressive NO message box -->
+    <div id="noBox" class="noBox">
+      <div class="noBoxTitle" id="noBoxTitle">Hold on… 🥺👉👈</div>
+      <p class="noBoxText" id="noBoxText"></p>
     </div>
 
-    <div class="footer">No pressure. Just vibes. 🌷</div>
+    <div class="hint" style="margin-top:14px;">No pressure. Just vibes. 🌷</div>
   </div>
 
   <script>
@@ -242,25 +254,69 @@
       setTimeout(()=> t.style.display = "none", 2200);
     }
 
-    function answer(choice){
-      if(choice === "NO"){
-        document.getElementById("noPanel").style.display = "block";
-        showToast("Aww 🥺 take another look… 🧸💗");
-        for(let i=0;i<10;i++) setTimeout(spawnHeart, i*90);
-      } else {
-        document.getElementById("noPanel").style.display = "none";
-        showToast("Yayyy 🥹💖 You just made my teddy happy 🧸");
-        for(let i=0;i<18;i++) setTimeout(spawnHeart, i*80);
-      }
+    // Progressive NO reasons (one-by-one)
+    const noReasons = [
+      "Reason #1: I’ll be super sweet to you 🧸💗",
+      "Reason #2: I owe you a cute food date 🍕",
+      "Reason #3: I’ll make you laugh (even at bad jokes) 😂",
+      "Reason #4: Calm vibes + good energy 🌸",
+      "Final reason: Saying YES might make you smile 🥹💖"
+    ];
 
-      // OPTIONAL (no Google Form): log answers with a free form-backend (e.g., Getform)
-      // 1) Create an endpoint and paste it below.
+    let noClicks = 0;
+    let yesScale = 1; // YES button scale
+
+    function updateYesButtonScale(){
+      const yesBtn = document.getElementById("yesBtn");
+      yesBtn.style.transform = `scale(${yesScale})`;
+    }
+
+    function showNoBox(text){
+      const box = document.getElementById("noBox");
+      const p = document.getElementById("noBoxText");
+      p.textContent = text;
+      box.style.display = "block";
+    }
+
+    function answerNo(){
+      // show the next reason, looping after last one
+      const idx = Math.min(noClicks, noReasons.length - 1);
+      showNoBox(noReasons[idx]);
+
+      // little toast + hearts
+      showToast("Aww 🥺 …okay but hear me out 🧸");
+      for(let i=0;i<8;i++) setTimeout(spawnHeart, i*90);
+
+      // Grow YES slowly each NO click
+      noClicks++;
+      yesScale = Math.min(1.0 + noClicks * 0.07, 1.65); // caps growth
+      updateYesButtonScale();
+
+      // After a bunch of NO clicks, make it extra cute
+      if (noClicks === 3) showToast("Okayyy the YES button is getting confident 😳💚");
+      if (noClicks === 5) showToast("At this point… the teddy is begging 🥹🧸");
+    }
+
+    function answerYes(){
+      // reset NO box (optional)
+      document.getElementById("noBox").style.display = "none";
+
+      showToast("Yayyy 🥹💖 You just made my teddy happy 🧸");
+      for(let i=0;i<18;i++) setTimeout(spawnHeart, i*80);
+
+      // OPTIONAL: Log answer with a free form-backend (e.g., Getform)
       // fetch("PASTE_YOUR_GETFORM_ENDPOINT_HERE", {
       //   method:"POST",
       //   headers:{ "Content-Type":"application/x-www-form-urlencoded" },
-      //   body: "answer=" + encodeURIComponent(choice) + "&ts=" + encodeURIComponent(new Date().toISOString())
+      //   body: "answer=YES&ts=" + encodeURIComponent(new Date().toISOString())
       // });
+
+      // if you want, redirect after YES:
+      // window.location.href = "https://instagram.com/yourprofile";
     }
+
+    // Initialize scale so transitions feel smooth
+    updateYesButtonScale();
   </script>
 </body>
 </html>
